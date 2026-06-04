@@ -1,0 +1,7 @@
+name: tacoda
+version: 0.1.0
+description: |
+  Example policy for tacoda projects. Layers on top of the keystone universal
+  baseline with personal/team preferences around documentation conciseness
+  and TODO hygiene. Intended as a reference for how an org policy is shaped
+  and as a testbed for the `keystone policy update` flow.
