@@ -1,7 +1,25 @@
-name: tacoda
-version: 0.1.0
+name: tacoda-org
+version: 0.2.0
+tier: org
+keystone_min: 0.12.0
 description: |
-  Example policy for tacoda projects. Layers on top of the keystone universal
-  baseline with personal/team preferences around documentation conciseness
-  and TODO hygiene. Intended as a reference for how an org policy is shaped
-  and as a testbed for the `keystone policy update` flow.
+  Example org-wide Keystone policy for tacoda projects. Demonstrates all four
+  policy components (corpus, guides, playbooks, actions), the `strict`
+  override-block, and the `required` gap-surfacing field. Layered on top of
+  the universal baseline that ships with keystone; intended to be layered
+  under team-level policies like tacoda-team.
+
+# Items below are locked at this tier — no team or project file may override.
+strict:
+  guides:
+    - documentation
+    - todos
+  actions:
+    - changelog-check
+
+# Items every install should have somewhere in the cascade. tacoda-org does
+# not ship them; the project (or a team policy) must define them. Verify
+# surfaces unmet ones as advisory gaps.
+required:
+  actions:
+    - release-notes

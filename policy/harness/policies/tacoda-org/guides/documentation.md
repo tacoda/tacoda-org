@@ -1,7 +1,7 @@
 # Documentation — rules
 
 The rules from [`corpus/documentation.md`](../corpus/documentation.md).
-Loaded ambient; enforced by the [drift sensor](../../../../sensors/drift.md). The corpus file holds the full reasoning and anti-patterns.
+Loaded ambient; enforced by the [drift sensor](../../../sensors/drift.md). The corpus file holds the full reasoning and anti-patterns.
 
 ## GOLDEN RULES
 
