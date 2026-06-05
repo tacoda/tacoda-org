@@ -41,6 +41,7 @@ policy/
       release.md             # non-strict — teams/projects may extend
     actions/                 # single units of lifecycle work
       changelog-check.md     # STRICT
+      static-analysis.md     # STRICT — language-agnostic; runs registered static-analysis sensors
       announce-release.md    # non-strict — teams/projects may override
 ```
 
@@ -51,6 +52,7 @@ policy/
 | `guides/documentation` | org | ✓ | Hemingway-test discipline applies across every team |
 | `guides/todos` | org | ✓ | Ownership + context + trigger is non-negotiable org-wide |
 | `actions/changelog-check` | org | ✓ | No release ships without a real CHANGELOG entry |
+| `actions/static-analysis` | org | ✓ | Static analysis is mandatory; teams plug in the tool (rubocop, staticcheck, eslint) via a sensor |
 | `guides/release-process` | org | ✗ | Teams refine the release flow (auth, mobile, infra differ) |
 | `playbooks/release` | org | ✗ | Teams add steps; the org provides the spine |
 | `actions/announce-release` | org | ✗ | Teams pick their own announcement surface (Slack, email, blog) |

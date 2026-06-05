@@ -1,5 +1,5 @@
 name: tacoda-org
-version: 0.2.0
+version: 0.3.0
 tier: org
 keystone_min: 0.12.0
 description: |
@@ -16,6 +16,7 @@ strict:
     - todos
   actions:
     - changelog-check
+    - static-analysis
 
 # Items every install should have somewhere in the cascade. tacoda-org does
 # not ship them; the project (or a team policy) must define them. Verify
