@@ -1,24 +1,24 @@
-# tacoda-policy
+# tacoda-org
 
-An example [Keystone](https://github.com/tacoda/keystone) policy. Installs into a project's `harness/policies/tacoda/` namespace and adds team preferences on top of the universal baseline that ships with keystone.
+An example [Keystone](https://github.com/tacoda/keystone) org policy. Installs into a project's `harness/policies/tacoda/` namespace and adds team preferences on top of the universal baseline that ships with keystone.
 
 ## Install
 
 ```bash
-keystone init --policy git+https://github.com/tacoda/tacoda-policy.git#v0.1.0
+keystone init --policy git+https://github.com/tacoda/tacoda-org.git#v0.1.0
 ```
 
 Track the default branch instead of a pinned tag if you want updates on every `policy update`:
 
 ```bash
-keystone init --policy git+https://github.com/tacoda/tacoda-policy.git#main
+keystone init --policy git+https://github.com/tacoda/tacoda-org.git#main
 ```
 
 Update an installed copy:
 
 ```bash
-keystone policy update tacoda                 # re-resolve the recorded ref
-keystone policy update tacoda '#v0.2.0'       # bump to a new ref
+keystone policy update tacoda-org                 # re-resolve the recorded ref
+keystone policy update tacoda-org '#v0.2.0'       # bump to a new ref
 ```
 
 ## What's inside
