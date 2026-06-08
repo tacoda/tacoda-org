@@ -2,7 +2,7 @@
 
 An example **Keystone plugin** for [Keystone](https://github.com/tacoda/keystone) 1.0+. Demonstrates all four content kinds — corpus, guides, playbooks, actions — plus the `strict` override-block and the `required` gap-surfacing field.
 
-Every plugin has the same shape; precedence in the cascade is determined by where each plugin sits in the consumer's `keystone.json` nesting. Nest one plugin inside another to give the outer one strict-locking authority over the inner.
+Every plugin has the same shape. The cascade model: the consumer's project always wins by default; among plugins, the outer plugin (shallower in `keystone.json`) wins over plugins nested inside it. A plugin can mark an item `strict` to make it absolute — nothing else (project or any other plugin) can override a strict item.
 
 ## Install
 
@@ -44,7 +44,7 @@ corpus/                 # reasoning (on-demand)
 guides/                 # rules (always loaded)
   documentation.md      # STRICT
   todos.md              # STRICT
-  release-process.md    # non-strict — lower-precedence plugins or the project may override
+  release-process.md    # non-strict — the project's harness/guides/release-process.md may override
 playbooks/              # ordered action chains
   release.md            # non-strict — projects may extend
 actions/                # single units of lifecycle work
@@ -83,18 +83,22 @@ After `keystone plugin add tacoda-org`, `keystone verify` reports:
 ? plugin "tacoda-org" requires actions/release-notes — define it at <harness-root>/actions/release-notes.md
 ```
 
-The project (or a lower-precedence plugin) is on the hook to provide it. The gap is **advisory**, not a hard error — solo installs can defer it until a release.
+The project (or any other plugin in the cascade) is on the hook to provide it. The gap is **advisory**, not a hard error — solo installs can defer it until a release. `required` is about existence in the cascade, not about which layer wins.
 
 ## Precedence — what happens when the project (or another plugin) ships the same basename
 
-Precedence in 1.0 is **pre-order over the nested `keystone.json` plugin tree**, with project files taking effect first and plugin content layered underneath. Non-strict items can be overridden; strict items refuse the override and `keystone verify` errors.
+The cascade resolves like this:
 
-For example, with `tacoda-org` installed and a project-level `harness/playbooks/release.md`:
+1. **Project wins by default.** The consumer's `harness/<port>/<name>.md` takes effect over any same-basename file shipped by any plugin.
+2. **Among plugins, outer wins over inner.** If two plugins ship the same basename, the one less-nested in `keystone.json` wins; the inner plugin's version is ignored.
+3. **Strict locks absolutely.** A plugin's `strict` declaration on an item makes it the only version that can resolve — the project, sibling plugins, and descendant plugins all lose. `keystone verify` errors on any conflicting file.
+
+For example, with `tacoda-org` installed at the top of `keystone.json` and a project-level `harness/playbooks/release.md`:
 
 - `playbooks/release` is non-strict in this plugin → project's file wins.
-- `actions/changelog-check` is strict in this plugin → a project `harness/actions/changelog-check.md` is refused by verify.
+- `actions/changelog-check` is strict in this plugin → a project `harness/actions/changelog-check.md` is refused by `keystone verify`.
 
-See the upgrade guide and `docs/conventions.md` in the keystone repo for the full precedence rules.
+See `docs/conventions.md` in the keystone repo for the full precedence rules.
 
 ## Releasing this plugin
 

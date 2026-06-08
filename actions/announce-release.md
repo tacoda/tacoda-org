@@ -1,8 +1,8 @@
 # announce-release
 
-**Post a release announcement.** Non-strict — consumers may ship `harness/actions/announce-release.md` (project) or `harness/plugins/<nested-plugin>/actions/announce-release.md` to replace this with their own announcement style.
+**Post a release announcement.** Non-strict — the project may ship `harness/actions/announce-release.md` to replace this with its own announcement style, and the project's version will win.
 
-The default is intentionally minimal: a one-line message with the version, date, and a link to the CHANGELOG entry. Consumers that want richer formats (Slack blocks, internal docs, customer-facing posts) override.
+The default is intentionally minimal: a one-line message with the version, date, and a link to the CHANGELOG entry. Projects that want richer formats (Slack blocks, internal docs, customer-facing posts) override.
 
 ## Activities
 
@@ -12,7 +12,7 @@ The default is intentionally minimal: a one-line message with the version, date,
    ```
    <project> vX.Y.Z released (YYYY-MM-DD) — <first sentence of changelog entry>. Notes: <link to CHANGELOG.md at the tag>.
    ```
-3. **Print to stdout.** No upload, no API call by default — the output is paste-friendly. Consumers override to wire this into Slack, email, etc.
+3. **Print to stdout.** No upload, no API call by default — the output is paste-friendly. Projects override to wire this into Slack, email, etc.
 
 ## When to invoke
 

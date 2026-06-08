@@ -1,7 +1,7 @@
 # Release process — rules
 
 The rules from [`corpus/release-process.md`](../corpus/release-process.md).
-Loaded ambient; enforced by the [drift sensor](../../../sensors/drift.md). Non-strict — consumers (nested plugins or the project) may layer refinements with the same basename.
+Loaded ambient; enforced by the [drift sensor](../../../sensors/drift.md). Non-strict — the project may ship `harness/guides/release-process.md` to layer refinements with the same basename, and the project's version will win.
 
 ## GOLDEN RULES
 
