@@ -1,8 +1,8 @@
 # announce-release
 
-**Post a release announcement.** Non-strict at the tacoda-org tier — teams and projects may ship `harness/actions/announce-release.md` or `harness/policies/<team>/actions/announce-release.md` to replace this with their own announcement style.
+**Post a release announcement.** Non-strict — consumers may ship `harness/actions/announce-release.md` (project) or `harness/plugins/<nested-plugin>/actions/announce-release.md` to replace this with their own announcement style.
 
-The org-default is intentionally minimal: a one-line message with the version, date, and a link to the CHANGELOG entry. Teams that want richer formats (Slack blocks, internal docs, customer-facing posts) override.
+The default is intentionally minimal: a one-line message with the version, date, and a link to the CHANGELOG entry. Consumers that want richer formats (Slack blocks, internal docs, customer-facing posts) override.
 
 ## Activities
 
@@ -12,7 +12,7 @@ The org-default is intentionally minimal: a one-line message with the version, d
    ```
    <project> vX.Y.Z released (YYYY-MM-DD) — <first sentence of changelog entry>. Notes: <link to CHANGELOG.md at the tag>.
    ```
-3. **Print to stdout.** No upload, no API call at this tier — the org default is paste-friendly. Teams override to wire this into Slack, email, etc.
+3. **Print to stdout.** No upload, no API call by default — the output is paste-friendly. Consumers override to wire this into Slack, email, etc.
 
 ## When to invoke
 

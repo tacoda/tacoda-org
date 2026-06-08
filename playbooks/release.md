@@ -1,15 +1,15 @@
 # release
 
-**Org-level release playbook.** Walks the org-mandated release activities in order. **Non-strict** — teams may ship `harness/policies/<team>/playbooks/release.md` with team-specific extensions; projects may ship `harness/playbooks/release.md` for project-specific steps.
+**Shared release playbook.** Walks the mandated release activities in order. **Non-strict** — consumers may ship `harness/plugins/<nested-plugin>/playbooks/release.md` with nested-plugin extensions; projects may ship `harness/playbooks/release.md` for project-specific steps.
 
 **Invoke as:** "run release" or "run the release playbook."
 
 ## Activities
 
 1. **changelog-check** — read [`changelog-check.md`](../actions/changelog-check.md). Verify `CHANGELOG.md` has an entry for the version being released. Hard gate: no release without a changelog entry.
-2. **release-notes** — read `release-notes.md`. **Required but not shipped by tacoda-org** — the project (or a team policy) must provide this action. `keystone policy verify` will surface it as a gap when missing.
+2. **release-notes** — read `release-notes.md`. **Required but not shipped by tacoda-org** — the project (or another plugin in the cascade) must provide this action. `keystone verify` will surface it as a gap when missing.
 3. **verify** — read [`verify.md`](../../../actions/verify.md). Run the standard lint / type-check / test / build / drift / commit-message sensors against the release commit.
-4. **announce-release** — read [`announce-release.md`](../actions/announce-release.md). Org default is a single CHANGELOG link; teams can override with their own announcement style.
+4. **announce-release** — read [`announce-release.md`](../actions/announce-release.md). Default is a single CHANGELOG link; consumers can override with their own announcement style.
 
 ## Iron law
 

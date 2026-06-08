@@ -4,7 +4,7 @@ A release is a single moment that is hard to undo. The process exists so the tea
 
 > **Rules extracted:** [`guides/release-process.md`](../guides/release-process.md). This file holds the reasoning and anti-patterns.
 
-This policy is **not strict**. Teams within tacoda layer their own release conventions on top; projects can layer further. See `harness/policies/<team>/guides/release-process.md` for the team's refinements.
+This guide is **not strict**. Consumers (nested plugins or the project) may layer their own release conventions on top. See `harness/plugins/<nested-plugin>/guides/release-process.md` or `harness/guides/release-process.md` for refinements.
 
 ## What a release must do
 
@@ -18,6 +18,6 @@ This policy is **not strict**. Teams within tacoda layer their own release conve
 - **Squashing the changelog into the commit body.** Commits are for code archeology; the changelog is for downstreams. They have different audiences.
 - **"Will land in the next release."** Aspirational changelog entries lie. Document what shipped, not what's coming.
 
-## Why this lives at the org tier
+## Why this lives in a shared plugin
 
-Cross-team consistency. When tacoda-org projects are read together — by a new hire, an auditor, an LLM doing a portfolio sweep — the release format being the same across all of them lowers cognitive load by an order of magnitude. The team and project can refine *within* this shape; they shouldn't invent a new one.
+Cross-project consistency. When tacoda projects are read together — by a new hire, an auditor, an LLM doing a portfolio sweep — the release format being the same across all of them lowers cognitive load by an order of magnitude. Consumers can refine *within* this shape; they shouldn't invent a new one.

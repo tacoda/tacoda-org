@@ -1,6 +1,6 @@
 # changelog-check
 
-**Verify a CHANGELOG entry exists for the version being released.** Strict at the tacoda-org tier — no team or project may override this action's enforcement.
+**Verify a CHANGELOG entry exists for the version being released.** Strict — no consumer (nested plugin or project) may override this action's enforcement.
 
 ## Activities
 
@@ -12,7 +12,7 @@
 
 ## Gate
 
-Hard gate. No release proceeds without a real changelog entry. Strict at the org tier — `keystone policy verify` blocks any project file at `harness/actions/changelog-check.md` that would override this.
+Hard gate. No release proceeds without a real changelog entry. Strict — `keystone verify` blocks any consumer file at `harness/actions/changelog-check.md` that would override this.
 
 ## Output
 

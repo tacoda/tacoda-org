@@ -1,8 +1,8 @@
 # tacoda-org
 
-An example **org-tier plugin** for [Keystone](https://github.com/tacoda/keystone) 1.0+. Demonstrates all four content kinds — corpus, guides, playbooks, actions — plus the `strict` override-block and the `required` gap-surfacing field.
+An example **Keystone plugin** for [Keystone](https://github.com/tacoda/keystone) 1.0+. Demonstrates all four content kinds — corpus, guides, playbooks, actions — plus the `strict` override-block and the `required` gap-surfacing field.
 
-Pair this with [`tacoda-team`](https://github.com/tacoda/tacoda-team) to see org → team precedence in a nested `keystone.json` tree.
+Every plugin has the same shape; precedence in the cascade is determined by where each plugin sits in the consumer's `keystone.json` nesting. Nest one plugin inside another to give the outer one strict-locking authority over the inner.
 
 ## Install
 
@@ -36,7 +36,7 @@ keystone plugin remove tacoda-org
 ## What's inside
 
 ```
-keystone-plugin.json    # manifest: name, version, tier=org, strict, required, description
+keystone-plugin.json    # manifest: name, version, keystone_min, strict, required, description
 corpus/                 # reasoning (on-demand)
   documentation.md
   todos.md
@@ -57,15 +57,15 @@ The whole tree (minus `.git` and this README) is copied verbatim into `<harness-
 
 ## Strictness in this example
 
-| Item | Tier | Strict? | Why |
-|---|---|---|---|
-| `guides/documentation` | org | ✓ | Hemingway-test discipline applies across every team |
-| `guides/todos` | org | ✓ | Ownership + context + trigger is non-negotiable org-wide |
-| `actions/changelog-check` | org | ✓ | No release ships without a real CHANGELOG entry |
-| `actions/static-analysis` | org | ✓ | Static analysis is mandatory; teams plug in the tool (rubocop, staticcheck, eslint) via a sensor |
-| `guides/release-process` | org | ✗ | Teams refine the release flow (auth, mobile, infra differ) |
-| `playbooks/release` | org | ✗ | Teams add steps; the org provides the spine |
-| `actions/announce-release` | org | ✗ | Teams pick their own announcement surface (Slack, email, blog) |
+| Item | Strict? | Why |
+|---|---|---|
+| `guides/documentation` | ✓ | Hemingway-test discipline applies broadly |
+| `guides/todos` | ✓ | Ownership + context + trigger is non-negotiable |
+| `actions/changelog-check` | ✓ | No release ships without a real CHANGELOG entry |
+| `actions/static-analysis` | ✓ | Static analysis is mandatory; consumers plug in the tool (rubocop, staticcheck, eslint) via a sensor |
+| `guides/release-process` | ✗ | Consumers refine the release flow (auth, mobile, infra differ) |
+| `playbooks/release` | ✗ | Consumers add steps; this plugin provides the spine |
+| `actions/announce-release` | ✗ | Consumers pick their own announcement surface (Slack, email, blog) |
 
 ## The `required` field
 
@@ -80,7 +80,7 @@ The whole tree (minus `.git` and this README) is copied verbatim into `<harness-
 After `keystone plugin add tacoda-org`, `keystone verify` reports:
 
 ```
-? plugin "tacoda-org" (tier org) requires actions/release-notes — define it at <harness-root>/actions/release-notes.md
+? plugin "tacoda-org" requires actions/release-notes — define it at <harness-root>/actions/release-notes.md
 ```
 
 The project (or a lower-precedence plugin) is on the hook to provide it. The gap is **advisory**, not a hard error — solo installs can defer it until a release.
@@ -91,8 +91,8 @@ Precedence in 1.0 is **pre-order over the nested `keystone.json` plugin tree**, 
 
 For example, with `tacoda-org` installed and a project-level `harness/playbooks/release.md`:
 
-- `playbooks/release` is non-strict at the org plugin → project's file wins.
-- `actions/changelog-check` is strict at the org plugin → a project `harness/actions/changelog-check.md` is refused by verify.
+- `playbooks/release` is non-strict in this plugin → project's file wins.
+- `actions/changelog-check` is strict in this plugin → a project `harness/actions/changelog-check.md` is refused by verify.
 
 See the upgrade guide and `docs/conventions.md` in the keystone repo for the full precedence rules.
 
