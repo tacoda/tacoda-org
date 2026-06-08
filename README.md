@@ -1,49 +1,59 @@
 # tacoda-org
 
-An example **org-tier** policy for [Keystone](https://github.com/tacoda/keystone) 0.12+. Demonstrates all four policy components — corpus, guides, playbooks, actions — plus the `strict` override-block and the `required` gap-surfacing field.
+An example **org-tier plugin** for [Keystone](https://github.com/tacoda/keystone) 1.0+. Demonstrates all four content kinds — corpus, guides, playbooks, actions — plus the `strict` override-block and the `required` gap-surfacing field.
 
-Pair this with [`tacoda-team`](https://github.com/tacoda/tacoda-team) to see the full three-tier cascade in action (org → team → project).
+Pair this with [`tacoda-team`](https://github.com/tacoda/tacoda-team) to see org → team precedence in a nested `keystone.json` tree.
 
 ## Install
 
-```bash
-keystone init --policy git+https://github.com/tacoda/tacoda-org.git#v0.2.0
-```
-
-Track the default branch instead of a pinned tag for rolling updates:
+Declare the plugin and let `install` vendor it into `<harness-root>/plugins/tacoda-org/`:
 
 ```bash
-keystone init --policy git+https://github.com/tacoda/tacoda-org.git#main
+keystone plugin add tacoda/tacoda-org@v1.0.0
 ```
+
+Or — if you already edited `keystone.json` by hand:
+
+```bash
+keystone install
+```
+
+The vendored tree is read-only on POSIX, gitignored, and hash-pinned in `<harness-root>/keystone.lock.json`. `keystone verify` reports any drift; `keystone install` re-applies the pinned state.
 
 Update an installed copy:
 
 ```bash
-keystone policy update tacoda-org                 # re-resolve the recorded ref
-keystone policy update tacoda-org git+https://github.com/tacoda/tacoda-org.git#v0.3.0
+keystone plugin update tacoda-org                       # re-resolve the recorded ref
+keystone plugin update tacoda-org tacoda/tacoda-org@v1.1.0   # bump to a new ref
+```
+
+Remove it:
+
+```bash
+keystone plugin remove tacoda-org
 ```
 
 ## What's inside
 
 ```
-keystone-policy.yaml         # manifest: name, version, tier=org, strict, required
-policy/
-  harness/policies/tacoda-org/
-    corpus/                  # reasoning (on-demand)
-      documentation.md
-      todos.md
-      release-process.md
-    guides/                  # rules (always loaded)
-      documentation.md       # STRICT
-      todos.md               # STRICT
-      release-process.md     # non-strict — teams/projects may override
-    playbooks/               # ordered action chains
-      release.md             # non-strict — teams/projects may extend
-    actions/                 # single units of lifecycle work
-      changelog-check.md     # STRICT
-      static-analysis.md     # STRICT — language-agnostic; runs registered static-analysis sensors
-      announce-release.md    # non-strict — teams/projects may override
+keystone-plugin.json    # manifest: name, version, tier=org, strict, required, description
+corpus/                 # reasoning (on-demand)
+  documentation.md
+  todos.md
+  release-process.md
+guides/                 # rules (always loaded)
+  documentation.md      # STRICT
+  todos.md              # STRICT
+  release-process.md    # non-strict — lower-precedence plugins or the project may override
+playbooks/              # ordered action chains
+  release.md            # non-strict — projects may extend
+actions/                # single units of lifecycle work
+  changelog-check.md    # STRICT
+  static-analysis.md    # STRICT — language-agnostic; runs registered static-analysis sensors
+  announce-release.md   # non-strict — projects pick their own announcement surface
 ```
+
+The whole tree (minus `.git` and this README) is copied verbatim into `<harness-root>/plugins/tacoda-org/` at install time.
 
 ## Strictness in this example
 
@@ -59,54 +69,42 @@ policy/
 
 ## The `required` field
 
-`tacoda-org` does **not** ship a `release-notes` action — but it declares that one should exist somewhere in the cascade:
+`tacoda-org` does **not** ship a `release-notes` action — but it declares that one should exist somewhere in the install:
 
-```yaml
-required:
-  actions:
-    - release-notes
+```json
+"required": {
+  "actions": ["release-notes"]
+}
 ```
 
-After `keystone policy add tacoda-org`, `keystone policy verify` reports:
+After `keystone plugin add tacoda-org`, `keystone verify` reports:
 
 ```
-? policy "tacoda-org" (tier org) requires actions/release-notes — define it at harness/actions/release-notes.md
+? plugin "tacoda-org" (tier org) requires actions/release-notes — define it at <harness-root>/actions/release-notes.md
 ```
 
-The project (or a team policy) is on the hook to provide it. The verify gap is **advisory**, not a hard error — solo installs can defer it until a release.
+The project (or a lower-precedence plugin) is on the hook to provide it. The gap is **advisory**, not a hard error — solo installs can defer it until a release.
 
-## Overrides — what happens when a team or project ships the same file
+## Precedence — what happens when the project (or another plugin) ships the same basename
 
-```
-harness/
-├── playbooks/
-│   └── release.md                            # ← project's release playbook (wins)
-└── policies/
-    ├── tacoda-team/
-    │   └── playbooks/release.md              # ← team's release playbook (used if project absent)
-    └── tacoda-org/
-        └── playbooks/release.md              # ← org default (used if both above absent)
-```
+Precedence in 1.0 is **pre-order over the nested `keystone.json` plugin tree**, with project files taking effect first and plugin content layered underneath. Non-strict items can be overridden; strict items refuse the override and `keystone verify` errors.
 
-`release` is non-strict at the org tier, so this cascade is fine. Compare with `changelog-check`: if a project shipped `harness/actions/changelog-check.md`, `keystone policy verify` would error and the install/update would refuse.
+For example, with `tacoda-org` installed and a project-level `harness/playbooks/release.md`:
 
-## Cascade behavior at a glance
+- `playbooks/release` is non-strict at the org plugin → project's file wins.
+- `actions/changelog-check` is strict at the org plugin → a project `harness/actions/changelog-check.md` is refused by verify.
 
-- **Solo project** (no policies installed) — none of the above applies; the harness works as if this policy didn't exist.
-- **Solo + tacoda-org** — strict items lock in immediately; the `required` gap is advisory.
-- **Solo + tacoda-org + tacoda-team** — team extends/overrides the non-strict pieces; team-level strict adds another lock.
+See the upgrade guide and `docs/conventions.md` in the keystone repo for the full precedence rules.
 
-See [`harness/policies/README.md`](https://github.com/tacoda/keystone/blob/main/harness/policies/README.md) in the keystone repo for the full cascade documentation.
+## Releasing this plugin
 
-## Releasing this policy
-
-A change here ships as a git tag:
+A change here ships as a git tag — `keystone-min` in the manifest declares the binary floor.
 
 ```bash
 git commit -m "feat: add foo"
-git commit -m "docs(changelog): release 0.3.0"
-git tag -a v0.3.0 -m "v0.3.0"
-git push origin main v0.3.0
+git commit -m "docs(changelog): release 1.1.0"
+git tag -a v1.1.0 -m "v1.1.0"
+git push origin main v1.1.0
 ```
 
-Consumers pick it up with `keystone policy update tacoda-org git+https://github.com/tacoda/tacoda-org.git#v0.3.0`.
+Consumers pick it up with `keystone plugin update tacoda-org tacoda/tacoda-org@v1.1.0`.
