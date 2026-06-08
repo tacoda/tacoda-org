@@ -1,0 +1,14 @@
+{
+  "name": "tacoda-org",
+  "version": "1.0.0",
+  "tier": "org",
+  "keystone_min": "1.0.0",
+  "description": "Example org-tier Keystone plugin for tacoda projects. Demonstrates all four content kinds (corpus, guides, playbooks, actions), the `strict` override-block, and the `required` gap-surfacing field. Pair with tacoda-team to see org → team precedence in a nested keystone.json tree.",
+  "strict": {
+    "guides": ["documentation", "todos"],
+    "actions": ["changelog-check", "static-analysis"]
+  },
+  "required": {
+    "actions": ["release-notes"]
+  }
+}
