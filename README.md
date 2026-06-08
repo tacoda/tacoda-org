@@ -2,7 +2,7 @@
 
 An example **Keystone plugin** for [Keystone](https://github.com/tacoda/keystone) 1.0+. Demonstrates all four content kinds — corpus, guides, playbooks, actions — plus the `strict` override-block and the `required` gap-surfacing field.
 
-Every plugin has the same shape. The cascade model: the consumer's project always wins by default; among plugins, the outer plugin (shallower in `keystone.json`) wins over plugins nested inside it. A plugin can mark an item `strict` to make it absolute — nothing else (project or any other plugin) can override a strict item.
+Every plugin has the same shape. The cascade model: the consumer's project always wins by default; among plugins, plugins nested deeper in `keystone.json` refine the outer plugins they're nested in. A plugin can mark an item `strict` to make it absolute — nothing else (project or any other plugin) can override a strict item.
 
 ## Install
 
@@ -90,8 +90,8 @@ The project (or any other plugin in the cascade) is on the hook to provide it. T
 The cascade resolves like this:
 
 1. **Project wins by default.** The consumer's `harness/<port>/<name>.md` takes effect over any same-basename file shipped by any plugin.
-2. **Among plugins, outer wins over inner.** If two plugins ship the same basename, the one less-nested in `keystone.json` wins; the inner plugin's version is ignored.
-3. **Strict locks absolutely.** A plugin's `strict` declaration on an item makes it the only version that can resolve — the project, sibling plugins, and descendant plugins all lose. `keystone verify` errors on any conflicting file.
+2. **Among plugins, deeper refines outer.** If two plugins ship the same basename, the one nested deeper in `keystone.json` wins — it refines the outer plugin's version. Think CSS or Rails: the more specific layer takes precedence.
+3. **Strict locks absolutely.** A plugin's `strict` declaration on an item makes it the only version that can resolve — the project, sibling plugins, ancestors, and descendants all lose. `keystone verify` errors on any conflicting file.
 
 For example, with `tacoda-org` installed at the top of `keystone.json` and a project-level `harness/playbooks/release.md`:
 

@@ -1,6 +1,6 @@
 {
   "name": "tacoda-org",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "keystone_min": "1.0.0",
   "description": "Example Keystone plugin for tacoda projects. Demonstrates all four content kinds (corpus, guides, playbooks, actions), the `strict` override-block, and the `required` gap-surfacing field. Precedence comes from where each plugin is nested in the consumer's keystone.json.",
   "strict": {

@@ -5,6 +5,19 @@ All notable changes to this plugin are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/);
 this plugin uses semantic versioning. Releases are git tags of the form `vX.Y.Z`.
 
+## [1.1.2] - 2026-06-08
+
+Cascade-model wording revert, matching keystone v1.0.3's course-correction. v1.1.1 described the cascade as "outer plugins win over plugins nested inside them" — that was backwards from what the code has always done. The natural reading of `keystone.json` (outermost-first) matches the actual override direction: deeper-nested plugins **refine** the outer plugins they're nested in. The project still wins by default for non-strict items; strict still locks absolutely.
+
+### Changed
+
+- README cascade section rewritten: "deeper refines outer" replaces "outer wins over inner." Added CSS/Rails analogy: the more specific layer takes precedence.
+- README opening paragraph: same direction flip.
+
+### Behavior
+
+- No file structure, strict declarations, or behavior changed. Byte-identical content to v1.1.1 except for the two prose paragraphs above.
+
 ## [1.1.1] - 2026-06-08
 
 Cascade-model wording fix, matching keystone v1.0.2's clarification. The plugin's prose described several override scenarios that aren't actually possible under the cascade — specifically, that nested plugins could override an outer plugin's non-strict items. They can't: outer plugins win over plugins nested inside them; only the project can override an outer plugin's non-strict item. This release tightens the README, the release playbook, the release-process guide, and the announce-release action to describe the actual semantics.
@@ -54,6 +67,7 @@ Cascade-model wording fix, matching keystone v1.0.2's clarification. The plugin'
 
 - Initial scaffold of the example plugin: documentation guide, todos guide, release-process guide, and the `changelog-check` action.
 
+[1.1.2]: https://github.com/tacoda/tacoda-org/releases/tag/v1.1.2
 [1.1.1]: https://github.com/tacoda/tacoda-org/releases/tag/v1.1.1
 [1.1.0]: https://github.com/tacoda/tacoda-org/releases/tag/v1.1.0
 [1.0.0]: https://github.com/tacoda/tacoda-org/releases/tag/v1.0.0
